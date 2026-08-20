@@ -53,8 +53,8 @@ export default function App() {
 
   return (
     <main className="min-h-screen bg-[#f8f7f2] px-4 py-8 text-[#17211b]">
-      <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-xl flex-col justify-center">
-        <div className="rounded-lg border border-[#d8dfd0] bg-white/82 p-6 shadow-sm sm:p-8">
+      <section className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-xl flex-col justify-center">
+        <div className="w-full rounded-lg border border-[#d8dfd0] bg-white/82 p-6 shadow-sm sm:p-8">
           <TimerDisplay mode={timer.mode} secondsRemaining={timer.secondsRemaining} />
           <TimerControls
             status={timer.status}
