@@ -18,6 +18,21 @@ describe('storage', () => {
     );
   });
 
+  it('defaults sound reminder to enabled', () => {
+    expect(loadPomodoroStorage(new Date(2026, 7, 20)).settings.soundEnabled).toBe(true);
+  });
+
+  it('preserves disabled sound reminder from storage', () => {
+    savePomodoroStorage({
+      settings: { workMinutes: 25, shortBreakMinutes: 5, soundEnabled: false },
+      todayKey: '2026-08-20',
+      todayCompletedCount: 0,
+      recentCompletions: [],
+    });
+
+    expect(loadPomodoroStorage(new Date(2026, 7, 20)).settings.soundEnabled).toBe(false);
+  });
+
   it('returns defaults when storage contains invalid data', () => {
     localStorage.setItem(STORAGE_KEY, '{broken');
 
@@ -28,7 +43,7 @@ describe('storage', () => {
 
   it('resets today count when the local date changes', () => {
     savePomodoroStorage({
-      settings: { workMinutes: 30, shortBreakMinutes: 7 },
+      settings: { workMinutes: 30, shortBreakMinutes: 7, soundEnabled: true },
       todayKey: '2026-08-19',
       todayCompletedCount: 4,
       recentCompletions: [
@@ -42,7 +57,7 @@ describe('storage', () => {
     });
 
     expect(loadPomodoroStorage(new Date(2026, 7, 20))).toEqual({
-      settings: { workMinutes: 30, shortBreakMinutes: 7 },
+      settings: { workMinutes: 30, shortBreakMinutes: 7, soundEnabled: true },
       todayKey: '2026-08-20',
       todayCompletedCount: 0,
       recentCompletions: [

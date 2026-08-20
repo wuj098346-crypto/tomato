@@ -65,6 +65,20 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
           className="mt-2 h-11 w-full rounded-md border border-[#cfd8c5] bg-white px-3 text-base outline-none focus:border-[#4f7d5a] focus:ring-2 focus:ring-[#4f7d5a]/20"
         />
       </label>
+      <label className="flex items-center justify-between gap-4 rounded-md border border-[#d8dfd0] bg-white px-3 py-3 sm:col-span-2">
+        <span className="text-sm font-medium text-[#526252]">铃声提醒</span>
+        <input
+          type="checkbox"
+          checked={settings.soundEnabled}
+          onChange={(event) =>
+            onChange({
+              ...settings,
+              soundEnabled: event.target.checked,
+            })
+          }
+          className="h-5 w-5 rounded border-[#cfd8c5] text-[#4f7d5a] accent-[#4f7d5a] focus:ring-[#4f7d5a]/20"
+        />
+      </label>
     </div>
   );
 }

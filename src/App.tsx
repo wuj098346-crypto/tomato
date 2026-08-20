@@ -12,6 +12,7 @@ import {
   MAX_RECENT_COMPLETIONS,
   savePomodoroStorage,
 } from './lib/storage';
+import { playSessionDoneSound } from './lib/sound';
 import type { PomodoroSettings, PomodoroStorage } from './lib/types';
 
 export default function App() {
@@ -43,7 +44,13 @@ export default function App() {
     settings: storageState.settings,
     focusText,
     onWorkComplete: handleWorkComplete,
-    notify: sendSessionDoneNotification,
+    notify: (mode, completedFocusText) => {
+      sendSessionDoneNotification(mode, completedFocusText);
+
+      if (storageState.settings.soundEnabled) {
+        playSessionDoneSound();
+      }
+    },
   });
 
   const handleStart = () => {

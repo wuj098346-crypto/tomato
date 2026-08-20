@@ -5,6 +5,7 @@ import { usePomodoroTimer } from './usePomodoroTimer';
 const settings = {
   workMinutes: 1,
   shortBreakMinutes: 1,
+  soundEnabled: true,
 };
 
 describe('usePomodoroTimer', () => {

@@ -9,6 +9,7 @@ export function defaultStorage(todayKey = getTodayKey()): PomodoroStorage {
     settings: {
       workMinutes: 25,
       shortBreakMinutes: 5,
+      soundEnabled: true,
     },
     todayKey,
     todayCompletedCount: 0,
@@ -31,6 +32,8 @@ export function loadPomodoroStorage(date = new Date()): PomodoroStorage {
       settings: {
         workMinutes: clampMinutes(Number(parsed.settings?.workMinutes), 1, 120),
         shortBreakMinutes: clampMinutes(Number(parsed.settings?.shortBreakMinutes), 1, 60),
+        soundEnabled:
+          typeof parsed.settings?.soundEnabled === 'boolean' ? parsed.settings.soundEnabled : true,
       },
       todayKey: typeof parsed.todayKey === 'string' ? parsed.todayKey : todayKey,
       todayCompletedCount: Number.isFinite(parsed.todayCompletedCount)

@@ -3,6 +3,7 @@ export type PomodoroMode = 'focus' | 'break';
 export type PomodoroSettings = {
   workMinutes: number;
   shortBreakMinutes: number;
+  soundEnabled: boolean;
 };
 
 export type CompletionRecord = {
