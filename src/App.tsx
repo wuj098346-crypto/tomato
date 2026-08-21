@@ -70,10 +70,12 @@ export default function App() {
         <div className="w-full rounded-lg border border-[#d8dfd0] bg-white/82 p-6 shadow-sm sm:p-8">
           <TimerDisplay mode={timer.mode} secondsRemaining={timer.secondsRemaining} />
           <TimerControls
+            mode={timer.mode}
             status={timer.status}
             onStart={handleStart}
             onPause={timer.pause}
             onReset={timer.reset}
+            onModeChange={timer.changeMode}
           />
           <StatsSummary todayCompletedCount={storageState.todayCompletedCount} />
           <FocusInput value={focusText} onChange={setFocusText} />

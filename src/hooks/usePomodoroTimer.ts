@@ -105,6 +105,16 @@ export function usePomodoroTimer({
     setSecondsRemaining(durationForMode(mode, settings));
   }, [mode, settings]);
 
+  const changeMode = useCallback(
+    (nextMode: PomodoroMode) => {
+      deadlineRef.current = null;
+      setMode(nextMode);
+      setStatus('idle');
+      setSecondsRemaining(durationForMode(nextMode, settings));
+    },
+    [settings],
+  );
+
   return {
     mode,
     status,
@@ -112,5 +122,6 @@ export function usePomodoroTimer({
     start,
     pause,
     reset,
+    changeMode,
   };
 }

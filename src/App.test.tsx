@@ -41,6 +41,16 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: '30:00' })).toBeInTheDocument();
   });
 
+  it('allows switching between focus and break modes', () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: '☕ 休息' }));
+
+    expect(screen.getByText('休息中')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '05:00' })).toBeInTheDocument();
+    expect(document.title).toBe('☕ 05:00');
+  });
+
   it('plays a sound by default when the timer completes', async () => {
     vi.useFakeTimers();
     render(<App />);

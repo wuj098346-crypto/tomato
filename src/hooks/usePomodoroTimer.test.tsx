@@ -104,4 +104,22 @@ describe('usePomodoroTimer', () => {
 
     expect(result.current.secondsRemaining).toBe(45);
   });
+
+  it('allows switching modes and resets the timer to the selected mode duration', () => {
+    const { result } = renderHook(() =>
+      usePomodoroTimer({
+        settings: { ...settings, shortBreakMinutes: 5 },
+        focusText: '',
+        onWorkComplete: vi.fn(),
+        notify: vi.fn(),
+      }),
+    );
+
+    act(() => result.current.start());
+    act(() => result.current.changeMode('break'));
+
+    expect(result.current.mode).toBe('break');
+    expect(result.current.status).toBe('idle');
+    expect(result.current.secondsRemaining).toBe(300);
+  });
 });
