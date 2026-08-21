@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PomodoroMode, PomodoroSettings } from '../lib/types';
 
 export type PomodoroStatus = 'idle' | 'running' | 'paused';
@@ -27,6 +27,7 @@ export function usePomodoroTimer({
   const [secondsRemaining, setSecondsRemaining] = useState(() =>
     durationForMode(initialMode, settings),
   );
+  const deadlineRef = useRef<number | null>(null);
 
   const currentDurationSeconds = useMemo(
     () => durationForMode(mode, settings),
@@ -34,6 +35,7 @@ export function usePomodoroTimer({
   );
 
   const completeSession = useCallback(() => {
+    deadlineRef.current = null;
     const completedMode = mode;
     const nextMode: PomodoroMode = completedMode === 'focus' ? 'break' : 'focus';
 
@@ -52,11 +54,22 @@ export function usePomodoroTimer({
       return;
     }
 
-    const intervalId = window.setInterval(() => {
-      setSecondsRemaining((value) => Math.max(0, value - 1));
-    }, 1000);
+    const syncRemainingTime = () => {
+      if (deadlineRef.current === null) {
+        return;
+      }
 
-    return () => window.clearInterval(intervalId);
+      setSecondsRemaining(Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000)));
+    };
+
+    syncRemainingTime();
+    const intervalId = window.setInterval(syncRemainingTime, 1000);
+    document.addEventListener('visibilitychange', syncRemainingTime);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', syncRemainingTime);
+    };
   }, [status]);
 
   useEffect(() => {
@@ -72,14 +85,22 @@ export function usePomodoroTimer({
   }, [currentDurationSeconds, status]);
 
   const start = useCallback(() => {
+    deadlineRef.current = Date.now() + secondsRemaining * 1000;
     setStatus('running');
-  }, []);
+  }, [secondsRemaining]);
 
   const pause = useCallback(() => {
-    setStatus((value) => (value === 'running' ? 'paused' : value));
-  }, []);
+    if (status !== 'running' || deadlineRef.current === null) {
+      return;
+    }
+
+    setSecondsRemaining(Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000)));
+    deadlineRef.current = null;
+    setStatus('paused');
+  }, [status]);
 
   const reset = useCallback(() => {
+    deadlineRef.current = null;
     setStatus('idle');
     setSecondsRemaining(durationForMode(mode, settings));
   }, [mode, settings]);

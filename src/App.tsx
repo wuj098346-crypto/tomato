@@ -13,6 +13,7 @@ import {
   savePomodoroStorage,
 } from './lib/storage';
 import { playSessionDoneSound } from './lib/sound';
+import { formatDuration } from './lib/time';
 import type { PomodoroSettings, PomodoroStorage } from './lib/types';
 
 export default function App() {
@@ -57,6 +58,11 @@ export default function App() {
     void requestNotificationPermission();
     timer.start();
   };
+
+  useEffect(() => {
+    const modeIcon = timer.mode === 'focus' ? '🍅' : '☕';
+    document.title = `${modeIcon} ${formatDuration(timer.secondsRemaining)}`;
+  }, [timer.mode, timer.secondsRemaining]);
 
   return (
     <main className="min-h-screen bg-[#f8f7f2] px-4 py-8 text-[#17211b]">

@@ -84,4 +84,24 @@ describe('usePomodoroTimer', () => {
     expect(result.current.secondsRemaining).toBe(60);
     expect(notify).toHaveBeenCalledWith('break', '');
   });
+
+  it('uses elapsed wall-clock time when returning to a backgrounded tab', () => {
+    vi.setSystemTime(new Date('2026-08-21T00:00:00Z'));
+    const { result } = renderHook(() =>
+      usePomodoroTimer({
+        settings,
+        focusText: '',
+        onWorkComplete: vi.fn(),
+        notify: vi.fn(),
+      }),
+    );
+
+    act(() => result.current.start());
+    act(() => {
+      vi.setSystemTime(new Date('2026-08-21T00:00:15Z'));
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+
+    expect(result.current.secondsRemaining).toBe(45);
+  });
 });

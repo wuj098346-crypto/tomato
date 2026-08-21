@@ -26,6 +26,7 @@ describe('App', () => {
     expect(screen.getByText('专注中')).toBeInTheDocument();
     expect(screen.getByLabelText('当前专注事项')).toBeInTheDocument();
     expect(screen.getByText('今日完成 0 个番茄')).toBeInTheDocument();
+    expect(document.title).toBe('🍅 25:00');
   });
 
   it('allows optional focus text and duration settings', async () => {
